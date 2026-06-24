@@ -1,0 +1,213 @@
+<div class="subpage-wrapper">
+  <header class="subpage-header">
+    <div class="header-left">
+      <a routerLink="/" class="back-btn" mat-icon-button aria-label="Go back to dashboard">
+        <mat-icon>chevron_left</mat-icon>
+      </a>
+      <div class="header-title-group">
+        <h1 class="subpage-title">Teachers Management</h1>
+        <span class="subpage-subtitle">Onboard academy mentors and manage their status</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="academy-badge">
+        <mat-icon>school</mat-icon>
+      </div>
+    </div>
+  </header>
+
+  <main class="subpage-content">
+    <div class="two-column-layout">
+      <div class="form-column">
+        <form class="teacher-form" (submit)="onSubmit($event)">
+          <h2 class="section-title">Add New Teacher</h2>
+
+          <div class="form-group">
+            <label for="teacherName" class="form-label">Teacher Name</label>
+            <input
+              type="text"
+              id="teacherName"
+              name="teacherName"
+              [(ngModel)]="teacher.name"
+              class="form-input"
+              placeholder="Enter teacher's name"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              [(ngModel)]="teacher.email"
+              class="form-input"
+              placeholder="Enter email address"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="mobileNumber" class="form-label">Mobile Number</label>
+            <input
+              type="tel"
+              id="mobileNumber"
+              name="mobileNumber"
+              [(ngModel)]="teacher.mobile"
+              class="form-input"
+              placeholder="Enter mobile number"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              [(ngModel)]="teacher.password"
+              class="form-input"
+              placeholder="Enter password"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="experience" class="form-label">Experience</label>
+            <input
+              type="text"
+              id="experience"
+              name="experience"
+              [(ngModel)]="teacher.experience"
+              class="form-input"
+              placeholder="e.g. 5 Years"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="specialization" class="form-label"
+              >Specialization (Guitar, Piano, Vocal, etc.)</label
+            >
+            <div class="select-wrapper">
+              <select
+                id="specialization"
+                name="specialization"
+                [(ngModel)]="teacher.specialization"
+                class="form-select"
+                required
+              >
+                <option value="" disabled selected>Select specialization</option>
+                <option *ngFor="let spec of specializations" [value]="spec">{{ spec }}</option>
+              </select>
+              <mat-icon class="select-chevron">expand_more</mat-icon>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <div class="status-toggle-group">
+              <button
+                type="button"
+                class="status-toggle-btn active-btn"
+                [class.selected]="teacher.status === 'Active'"
+                (click)="setStatus('Active')"
+              >
+                Active
+              </button>
+              <button
+                type="button"
+                class="status-toggle-btn inactive-btn"
+                [class.selected]="teacher.status === 'Inactive'"
+                (click)="setStatus('Inactive')"
+              >
+                Inactive
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="save-teacher-btn" [disabled]="!isFormValid()">
+            Save Teacher
+          </button>
+        </form>
+
+        <div class="success-banner" *ngIf="showSuccess">
+          <mat-icon class="success-icon">check_circle</mat-icon>
+          <div class="success-text">
+            <h4>Teacher Added Successfully!</h4>
+            <p>{{ lastSavedTeacherName }} has been registered as a mentor.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="list-column">
+        <div class="teachers-list-container">
+          <div class="list-header">
+            <h2 class="section-title">Teachers List</h2>
+            <span class="count-badge"
+              >{{ teachers.length }} Teacher{{ teachers.length === 1 ? '' : 's' }}</span
+            >
+          </div>
+
+          <div class="teachers-list">
+            <div class="teacher-item" *ngFor="let t of teachers">
+              <div class="teacher-info-row">
+                <div class="teacher-avatar" [style.backgroundColor]="t.avatarColor">
+                  {{ t.name.charAt(0) }}
+                </div>
+                <div class="teacher-details">
+                  <div class="teacher-name-row">
+                    <h3 class="teacher-name">{{ t.name }}</h3>
+                  </div>
+                  <div class="teacher-meta-row">
+                    <span class="meta-item spec">{{ t.specialization }}</span>
+                    <span class="meta-separator">•</span>
+                    <span class="meta-item exp">{{ t.experience }} exp</span>
+                  </div>
+                  <div class="teacher-contact-row">
+                    <span class="contact-item">
+                      <mat-icon>mail</mat-icon>
+                      <span class="contact-text">{{ t.email }}</span>
+                    </span>
+                    <span class="contact-item">
+                      <mat-icon>phone</mat-icon>
+                      <span class="contact-text">{{ t.mobile }}</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="teacher-actions">
+                <span
+                  class="status-badge"
+                  [class.active]="t.status === 'Active'"
+                  [class.inactive]="t.status === 'Inactive'"
+                  (click)="toggleTeacherStatus(t)"
+                >
+                  <span class="status-dot"></span>
+                  {{ t.status }}
+                </span>
+
+                <button
+                  mat-icon-button
+                  class="delete-btn"
+                  (click)="deleteTeacher(t)"
+                  aria-label="Delete teacher"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div class="no-teachers" *ngIf="teachers.length === 0">
+              <mat-icon>people_outline</mat-icon>
+              <p>No teachers registered yet.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

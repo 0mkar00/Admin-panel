@@ -1,0 +1,79 @@
+<div class="subpage-wrapper">
+  <header class="subpage-header">
+    <a routerLink="/" class="back-btn" mat-icon-button aria-label="Go back to dashboard">
+      <mat-icon>arrow_back</mat-icon>
+    </a>
+    <h1 class="subpage-title">Manage Courses</h1>
+  </header>
+
+  <main class="subpage-content">
+    <div class="stats-row">
+      <div class="stat-badge-card total">
+        <div class="stat-icon-wrapper">
+          <mat-icon class="stat-badge-icon">menu_book</mat-icon>
+        </div>
+        <div class="stat-badge-info">
+          <span class="stat-badge-label">Active Courses</span>
+          <span class="stat-badge-value">3</span>
+        </div>
+      </div>
+
+      <div class="stat-badge-card total-students">
+        <div class="stat-icon-wrapper">
+          <mat-icon class="stat-badge-icon">groups</mat-icon>
+        </div>
+        <div class="stat-badge-info">
+          <span class="stat-badge-label">Total Enrolled</span>
+          <span class="stat-badge-value">7</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="courses-grid">
+      <mat-card class="course-card" *ngFor="let course of courses">
+        <mat-card-content class="course-card-content">
+          <div class="course-header">
+            <div
+              class="course-icon-bg"
+              [style.backgroundColor]="course.color + '15'"
+              [style.color]="course.color"
+            >
+              <mat-icon class="course-icon">{{ course.icon }}</mat-icon>
+            </div>
+            <div class="course-meta">
+              <span class="level-badge" [class]="course.level.toLowerCase()">{{
+                course.level
+              }}</span>
+            </div>
+          </div>
+
+          <h3 class="course-name">{{ course.name }}</h3>
+          <p class="course-desc">{{ course.description }}</p>
+
+          <div class="course-details">
+            <div class="detail-item">
+              <mat-icon class="detail-icon">group</mat-icon>
+              <span
+                >{{ course.enrolledStudents }} Student{{
+                  course.enrolledStudents === 1 ? '' : 's'
+                }}</span
+              >
+            </div>
+          </div>
+
+          <div class="course-footer">
+            <span class="course-price">{{ course.price }}</span>
+            <button
+              mat-flat-button
+              class="view-details-btn"
+              [style.backgroundColor]="course.color"
+              color="primary"
+            >
+              Manage
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </main>
+</div>

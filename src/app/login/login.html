@@ -1,0 +1,55 @@
+<div class="login-container">
+  <div class="login-card-wrapper">
+    <mat-card class="login-card">
+      <mat-card-content class="login-content">
+        <div class="logo-header">
+          <div class="logo-circle">
+            <mat-icon class="logo-icon">shield</mat-icon>
+          </div>
+          <h2 class="login-title">Admin Login</h2>
+          <p class="login-subtitle">Please enter your administrator credentials</p>
+        </div>
+
+        <div class="error-alert" *ngIf="errorMessage">
+          <mat-icon class="alert-icon">error_outline</mat-icon>
+          <span class="alert-text">{{ errorMessage }}</span>
+        </div>
+
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="login-form">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Administrator Password</mat-label>
+            <input
+              matInput
+              [type]="hidePassword ? 'password' : 'text'"
+              name="password"
+              [(ngModel)]="password"
+              required
+              placeholder="Enter password"
+              #passwordInput="ngModel"
+              autocomplete="current-password"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="hidePassword = !hidePassword"
+              [attr.aria-label]="hidePassword ? 'Show password' : 'Hide password'"
+              [attr.aria-checked]="!hidePassword"
+            >
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <button
+            mat-flat-button
+            type="submit"
+            class="submit-btn"
+            [disabled]="!loginForm.form.valid"
+          >
+            Login
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
