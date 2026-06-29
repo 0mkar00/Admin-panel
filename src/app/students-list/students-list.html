@@ -98,11 +98,10 @@
               <th>Contact</th>
               <th>Course</th>
               <th>Status</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let student of filteredStudents" class="table-row">
+            <tr *ngFor="let student of filteredStudents" class="table-row" (click)="viewInfo(student)">
               <td>
                 <div class="name-cell">
                   <div class="avatar" [style.backgroundColor]="student.avatarColor">
@@ -138,15 +137,10 @@
                   </span>
                 </div>
               </td>
-              <td>
-                <button class="view-info-btn" (click)="viewInfo(student)" matRipple>
-                  <span>View Info</span>
-                </button>
-              </td>
             </tr>
 
             <tr *ngIf="filteredStudents.length === 0">
-              <td colspan="6" class="no-records-cell">
+              <td colspan="5" class="no-records-cell">
                 <mat-icon class="no-records-icon">search_off</mat-icon>
                 <p class="no-records-text">No students found matching your filters.</p>
               </td>
@@ -159,7 +153,7 @@
 
   <div class="info-drawer-backdrop" *ngIf="selectedStudent" (click)="closeInfo()">
     <div class="info-drawer" (click)="$event.stopPropagation()">
-      <div class="drawer-header-block">
+      <div class="drawer-header-block" style="border-bottom: none;">
         <div class="drawer-title-row">
           <span class="drawer-title">Student Profile</span>
           <button
@@ -188,11 +182,6 @@
           </div>
 
           <div class="profile-field-row">
-            <mat-icon class="field-icon">phone</mat-icon>
-            <span class="field-text">{{ selectedStudent.contact }}</span>
-          </div>
-
-          <div class="profile-field-row">
             <mat-icon class="field-icon">school</mat-icon>
             <span class="field-text">{{ selectedStudent.course }} Course</span>
           </div>
@@ -213,124 +202,6 @@
               {{ selectedStudent.status }}
             </span>
           </div>
-        </div>
-      </div>
-
-      <div class="drawer-info-section">
-        <div class="section-header-row">
-          <mat-icon class="section-header-icon">analytics</mat-icon>
-          <span class="section-header-title">PROGRESS</span>
-        </div>
-        <div class="section-content-list">
-          <div class="progress-metric-item">
-            <div class="progress-labels">
-              <span class="content-label">Lessons Completed</span>
-              <span class="content-value">{{ selectedStudent.progress.lessonsCompleted }}</span>
-            </div>
-            <div class="progress-bar-container">
-              <div
-                class="progress-bar-fill lessons-fill"
-                [style.width.%]="selectedStudent.progress.lessonsCompletedPct"
-              ></div>
-            </div>
-          </div>
-
-          <div class="progress-metric-item">
-            <div class="progress-labels">
-              <span class="content-label">Attendance</span>
-              <span class="content-value">{{ selectedStudent.progress.attendance }}</span>
-            </div>
-            <div class="progress-bar-container">
-              <div
-                class="progress-bar-fill attendance-fill"
-                [style.width.%]="selectedStudent.progress.attendancePct"
-              ></div>
-            </div>
-          </div>
-
-          <div class="progress-metric-item">
-            <div class="progress-labels">
-              <span class="content-label">Practice Score</span>
-              <span class="content-value">{{ selectedStudent.progress.practiceScore }}</span>
-            </div>
-            <div class="progress-bar-container">
-              <div
-                class="progress-bar-fill score-fill"
-                [style.width.%]="selectedStudent.progress.practiceScorePct"
-              ></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="drawer-info-section">
-        <div class="section-header-row">
-          <mat-icon class="section-header-icon">payments</mat-icon>
-          <span class="section-header-title">PAYMENT STATUS</span>
-        </div>
-        <div class="section-content-list payment-details">
-          <div class="section-content-row">
-            <span class="content-label">Plan</span>
-            <span class="content-value highlighted">{{ selectedStudent.payment.plan }}</span>
-          </div>
-          <div class="section-content-row">
-            <span class="content-label">Last Paid</span>
-            <span class="content-value">{{ selectedStudent.payment.lastPaid }}</span>
-          </div>
-          <div class="section-content-row align-center">
-            <span class="content-label">Status</span>
-            <span
-              class="payment-badge"
-              [class.paid]="selectedStudent.payment.status === 'Paid'"
-              [class.pending]="selectedStudent.payment.status === 'Pending'"
-              [class.unpaid]="selectedStudent.payment.status === 'Unpaid'"
-            >
-              {{ selectedStudent.payment.status }}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div class="drawer-info-section">
-        <div class="section-header-row">
-          <mat-icon class="section-header-icon">history</mat-icon>
-          <span class="section-header-title">ACTIVITY</span>
-        </div>
-        <div class="activity-timeline">
-          <div class="timeline-item" *ngFor="let act of selectedStudent.activities">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <span class="timeline-text">{{ act.text }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="drawer-info-section actions-section">
-        <div class="section-header-row">
-          <mat-icon class="section-header-icon">settings</mat-icon>
-          <span class="section-header-title">ACTIONS</span>
-        </div>
-        <div class="actions-buttons-row">
-          <button class="action-btn-item edit-btn" matRipple (click)="closeInfo()">
-            <mat-icon class="btn-icon">edit</mat-icon>
-            <span>Edit</span>
-          </button>
-          <button
-            class="action-btn-item suspend-btn"
-            matRipple
-            (click)="toggleSuspend(selectedStudent)"
-            [class.suspended-active]="selectedStudent.status === 'Suspended'"
-          >
-            <mat-icon class="btn-icon">{{
-              selectedStudent.status === 'Suspended' ? 'check_circle' : 'block'
-            }}</mat-icon>
-            <span>{{ selectedStudent.status === 'Suspended' ? 'Unsuspend' : 'Suspend' }}</span>
-          </button>
-          <button class="action-btn-item msg-btn" matRipple (click)="openWhatsApp(selectedStudent)">
-            <mat-icon class="btn-icon">chat_bubble_outline</mat-icon>
-            <span>Message</span>
-          </button>
         </div>
       </div>
     </div>

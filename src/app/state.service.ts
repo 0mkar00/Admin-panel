@@ -172,8 +172,8 @@ export class StateService {
       },
       payment: {
         plan: 'Monthly ₹5000',
-        lastPaid: '18 June 2026',
-        status: 'Paid',
+        lastPaid: '18 May 2026',
+        status: 'Unpaid',
       },
       activities: [
         { text: 'Joined course - 22 May' },

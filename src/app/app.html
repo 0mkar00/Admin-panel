@@ -6,8 +6,11 @@
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" class="sidebar">
       <div class="sidebar-header">
-        <mat-icon class="logo-icon">shield</mat-icon>
-        <span class="logo-text">Admin Panel</span>
+        <mat-icon class="logo-icon">music_note</mat-icon>
+        <div class="logo-text-group">
+          <span class="logo-title">Beats Academy</span>
+          <span class="logo-subtitle">Admin Panel</span>
+        </div>
       </div>
 
       <nav class="nav-links">
@@ -58,7 +61,7 @@
         <button mat-icon-button (click)="sidenav.toggle()" aria-label="Toggle navigation">
           <mat-icon>menu</mat-icon>
         </button>
-        <span class="topbar-title">Admin Panel</span>
+        <span class="topbar-title">Beats Academy Admin Panel</span>
       </div>
 
       <div class="content-body">

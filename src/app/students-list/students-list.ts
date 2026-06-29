@@ -68,7 +68,7 @@ export class StudentsListComponent {
   selectedCourse = 'All';
   selectedStudent: Student | null = null;
 
-  statuses = ['All', 'Active', 'Inactive', 'Suspended'];
+  statuses = ['All', 'Active', 'Inactive'];
 
   courses = ['All', 'Guitar Beginner', 'Guitar Intermediate', 'Guitar Advanced'];
 

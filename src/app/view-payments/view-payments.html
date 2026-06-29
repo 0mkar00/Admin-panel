@@ -1,19 +1,255 @@
 <div class="subpage-wrapper">
+  <!-- Toast notification message -->
+  <div class="toast-notification" [class.show]="showNotification">
+    <mat-icon class="toast-icon">check_circle</mat-icon>
+    <span class="toast-text">{{ notificationMessage }}</span>
+  </div>
+
+  <!-- Header topbar matching mockup -->
   <header class="subpage-header">
     <a routerLink="/" class="back-btn" mat-icon-button aria-label="Go back to dashboard">
       <mat-icon>arrow_back</mat-icon>
     </a>
-    <h1 class="subpage-title">View Payments</h1>
+    <h1 class="subpage-title">Payments Management</h1>
   </header>
-  <main class="subpage-content">
-    <mat-card class="content-card">
-      <mat-card-content>
-        <div class="placeholder-content">
-          <mat-icon class="placeholder-icon">account_balance_wallet</mat-icon>
-          <h3>Payment History</h3>
-          <p>Track, manage, and review all student transactions here.</p>
+
+  <!-- Main layout area -->
+  <main class="payments-content">
+
+    <!-- Stats metric cards row -->
+    <div class="stats-row">
+      <div class="stat-card revenue">
+        <div class="stat-icon-container">
+          <mat-icon class="stat-card-icon">account_balance_wallet</mat-icon>
         </div>
-      </mat-card-content>
-    </mat-card>
+        <div class="stat-card-info">
+          <span class="stat-label">Total Revenue</span>
+          <span class="stat-value">₹{{ totalRevenue | number }}</span>
+          <span class="stat-subtext">This Month</span>
+        </div>
+      </div>
+
+      <div class="stat-card paid">
+        <div class="stat-icon-container">
+          <mat-icon class="stat-card-icon font-filled">description</mat-icon>
+        </div>
+        <div class="stat-card-info">
+          <span class="stat-label">Paid Amount</span>
+          <span class="stat-value">₹{{ paidAmount | number }}</span>
+          <span class="stat-subtext text-green">This Month</span>
+        </div>
+      </div>
+
+      <div class="stat-card pending">
+        <div class="stat-icon-container">
+          <mat-icon class="stat-card-icon">pending_actions</mat-icon>
+        </div>
+        <div class="stat-card-info">
+          <span class="stat-label">Pending Amount</span>
+          <span class="stat-value">₹{{ pendingAmount | number }}</span>
+          <span class="stat-subtext text-orange">This Month</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Filters control bar -->
+    <div class="filters-card">
+      <div class="search-box">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input type="text" placeholder="Search student by name or email..." [(ngModel)]="searchTerm"
+          class="search-input" aria-label="Search payments by student name or email" />
+        <button mat-icon-button *ngIf="searchTerm" (click)="searchTerm = ''" class="clear-btn"
+          aria-label="Clear search">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="dropdowns-group">
+        <div class="filter-select-wrapper date-picker-select">
+          <select [(ngModel)]="selectedDate" class="custom-select" aria-label="Select date range">
+            <option *ngFor="let d of dates" [value]="d">{{ d }}</option>
+          </select>
+          <mat-icon class="select-icon-right">calendar_today</mat-icon>
+        </div>
+
+        <div class="filter-select-wrapper">
+          <select [(ngModel)]="selectedStatus" class="custom-select" aria-label="Filter by payment status">
+            <option value="All">All Status</option>
+            <option *ngFor="let s of statuses.slice(1)" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="table-container-card">
+      <div class="table-header">
+        <h3 class="table-title">PAYMENT DETAILS</h3>
+        <span class="results-count">Showing {{ filteredPayments.length }} payments</span>
+      </div>
+
+      <div class="table-responsive-wrapper">
+        <table class="payments-table">
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Course</th>
+              <th>Plan</th>
+              <th>Amount</th>
+              <th>Due Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let payment of filteredPayments" class="table-row"
+              [class.row-selected]="selectedPayment?.id === payment.id">
+              <td>
+                <div class="student-cell">
+                  <div class="avatar" [style.backgroundColor]="payment.avatarColor">
+                    {{ payment.studentName.charAt(0) }}
+                  </div>
+                  <div class="student-info">
+                    <span class="student-name">{{ payment.studentName }}</span>
+                    <span class="student-email">{{ payment.email }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="course-text">{{ payment.courseName }}</span>
+              </td>
+              <td>
+                <span class="plan-text">{{ payment.planName }}</span>
+              </td>
+              <td>
+                <span class="amount-text">₹{{ payment.amount | number }}</span>
+              </td>
+              <td>
+                <span class="date-text">{{ payment.dueDate }}</span>
+              </td>
+              <td>
+                <span class="status-badge" [class.paid]="payment.status === 'Paid'"
+                  [class.pending]="payment.status === 'Pending'">
+                  {{ payment.status }}
+                </span>
+              </td>
+              <td>
+                <button class="view-info-btn" (click)="viewInfo(payment)" matRipple>
+                  <span>View Info</span>
+                </button>
+              </td>
+            </tr>
+
+            <tr *ngIf="filteredPayments.length === 0">
+              <td colspan="7" class="no-records-cell">
+                <mat-icon class="no-records-icon">search_off</mat-icon>
+                <p class="no-records-text">No payment records found matching your filters.</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </main>
+
+  <!-- Payment Details Drawer Overlay - Styled exactly like the mockup -->
+  <div class="info-drawer-backdrop" *ngIf="selectedPayment" (click)="closeInfo()">
+    <div class="info-drawer" (click)="$event.stopPropagation()">
+
+      <!-- Drawer Header Block -->
+      <div class="drawer-header-block">
+        <div class="drawer-title-row">
+          <span class="drawer-title">PAYMENT DETAILS</span>
+          <button mat-icon-button (click)="closeInfo()" class="drawer-close-btn" aria-label="Close details">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div class="profile-hero">
+          <div class="profile-avatar-square" [style.backgroundColor]="selectedPayment.avatarColor">
+            {{ selectedPayment.studentName.charAt(0) }}
+          </div>
+          <div class="profile-hero-info">
+            <h2 class="student-name-title">{{ selectedPayment.studentName }}</h2>
+            <span class="profile-email">{{ selectedPayment.email }}</span>
+            <div class="course-badge-row">
+              <span class="course-text">{{ selectedPayment.courseName }} Course</span>
+              <span class="status-pill-badge" [class.paid]="selectedPayment.status === 'Paid'"
+                [class.pending]="selectedPayment.status === 'Pending'">
+                {{ selectedPayment.status }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drawer Body Content -->
+      <div class="drawer-body-content">
+
+        <!-- Boxed Card 1: Payment Summary -->
+        <div class="details-card-box">
+          <h5 class="box-title">PAYMENT SUMMARY</h5>
+          <div class="summary-list">
+            <div class="summary-row">
+              <span class="summary-label">Plan</span>
+              <span class="summary-value">{{ selectedPayment.planName }} ₹{{ selectedPayment.amount | number }}</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Last Paid</span>
+              <span class="summary-value">{{ selectedPayment.lastPaidDate }}</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Next Due</span>
+              <span class="summary-value">{{ selectedPayment.nextDueDate }}</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Payment Method</span>
+              <span class="summary-value">{{ selectedPayment.paymentMethod }}</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Invoice ID</span>
+              <span class="summary-value">{{ selectedPayment.invoiceId }}</span>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Boxed Card 3: Payment History -->
+        <div class="details-card-box">
+          <h5 class="box-title">PAYMENT HISTORY</h5>
+          <div class="history-list">
+            <div class="history-row" *ngFor="let item of selectedPayment.history">
+              <div class="history-left">
+                <span class="history-dot" [class.paid]="item.status === 'Paid'"
+                  [class.pending]="item.status === 'Pending'"></span>
+                <span class="history-month">{{ item.month }}</span>
+              </div>
+              <span class="history-amount">₹{{ item.amount | number }}</span>
+              <span class="history-status" [class.paid]="item.status === 'Paid'"
+                [class.pending]="item.status === 'Pending'">
+                {{ item.status }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Drawer Footer Actions -->
+      <div class="drawer-footer-actions">
+        <button class="footer-btn btn-outline" (click)="sendReminder(selectedPayment)" matRipple>
+          <mat-icon>send</mat-icon>
+          <span>Send Reminder</span>
+        </button>
+        <button class="footer-btn btn-solid" [disabled]="!hasPendingPayments" (click)="markAsPaid(selectedPayment)"
+          matRipple>
+          <mat-icon>payments</mat-icon>
+          <span>Mark as Paid</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
 </div>

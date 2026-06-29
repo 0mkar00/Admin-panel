@@ -282,3 +282,111 @@
   color: white !important;
   box-shadow: 0 4px 10px rgba(78, 92, 245, 0.2) !important;
 }
+
+.course-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .edit-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+
+  .edit-input,
+  .edit-textarea,
+  .edit-select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1e293b;
+    outline: none;
+    background-color: #f8fafc;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+
+    &:focus {
+      background-color: white;
+      border-color: #4e5cf5;
+      box-shadow: 0 0 0 3px rgba(78, 92, 245, 0.1);
+    }
+  }
+
+  .edit-textarea {
+    resize: none;
+    height: 70px;
+    font-family: inherit;
+    line-height: 1.4;
+  }
+
+  .edit-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .edit-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+
+    button {
+      flex: 1;
+      height: 38px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .save-btn {
+      background-color: #10b981;
+      color: white;
+
+      &:hover {
+        background-color: #059669;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+      }
+    }
+
+    .delete-btn {
+      background-color: rgba(239, 68, 68, 0.08);
+      color: #ef4444;
+
+      &:hover {
+        background-color: #ef4444;
+        color: white;
+        box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
+      }
+    }
+
+    .cancel-btn {
+      background-color: #f1f5f9;
+      color: #475569;
+
+      &:hover {
+        background-color: #e2e8f0;
+      }
+    }
+  }
+}

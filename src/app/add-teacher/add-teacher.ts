@@ -11,7 +11,6 @@ export interface TeacherForm {
   name: string;
   email: string;
   mobile: string;
-  password: string;
   experience: string;
   specialization: string;
   status: 'Active' | 'Inactive';
@@ -29,7 +28,6 @@ export class AddTeacherComponent {
     name: '',
     email: '',
     mobile: '',
-    password: '',
     experience: '',
     specialization: '',
     status: 'Active',
@@ -65,7 +63,6 @@ export class AddTeacherComponent {
       this.teacher.name.trim() &&
       this.teacher.email.trim() &&
       this.teacher.mobile.trim() &&
-      this.teacher.password.trim() &&
       this.teacher.experience.trim() &&
       this.teacher.specialization
     );
@@ -97,7 +94,6 @@ export class AddTeacherComponent {
         name: '',
         email: '',
         mobile: '',
-        password: '',
         experience: '',
         specialization: '',
         status: 'Active',
